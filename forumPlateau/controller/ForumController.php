@@ -6,21 +6,25 @@
     use App\AbstractController;
     use App\ControllerInterface;
     use Model\Managers\TopicManager;
+    use Model\Managers\CategorieManager;
     use Model\Managers\PostManager;
     
     class ForumController extends AbstractController implements ControllerInterface{
 
         public function index(){
-          
 
-           $topicManager = new TopicManager();
+            $CategorieManager = new CategorieManager();
+            $topicManager = new TopicManager();
 
             return [
-                "view" => VIEW_DIR."forum/listTopics.php",
+                "view" => VIEW_DIR."forum/listCategories.php",
                 "data" => [
-                    "topics" => $topicManager->findAll(["creationdate", "DESC"])
+                    "categories" => $CategorieManager->findAll(["categorie", "ASC"]),
+                    "topics" => $topicManager->findAll(["dateCreation", "DESC"])
                 ]
             ];
+
+            
         
         }
 
