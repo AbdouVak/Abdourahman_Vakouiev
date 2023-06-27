@@ -17,10 +17,10 @@
             $topicManager = new TopicManager();
 
             return [
-                "view" => VIEW_DIR."forum/listCategories.php",
+                "view" => VIEW_DIR."forum/listTopics.php",
                 "data" => [
                     "categories" => $CategorieManager->findAll(["categorie", "ASC"]),
-                    "topics" => $topicManager->findAll(["dateCreation", "DESC"])
+                    "topics" => $topicManager->findAll(["creationdate", "DESC"])
                 ]
             ];
 
