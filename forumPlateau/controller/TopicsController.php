@@ -5,18 +5,18 @@
     use App\Session;
     use App\AbstractController;
     use App\ControllerInterface;
-    use Model\Managers\PostManager;
+    use Model\Managers\TopicsManager;
 
     class TopicsController extends AbstractController implements ControllerInterface{
 
         public function index(){
 
-            $postManager = new PostManager();
+            $topicManager = new TopicsManager();
 
             return [
-                "view" => VIEW_DIR."forum/topics.php",
+                "view" => VIEW_DIR."forum/listTopic.php",
                 "data" => [
-                    "posts" => $postManager->findAll(["creationdate", "ASC"]),
+                    "topics" => $topicManager->findOneById($id)
                 ]
             ];
 
