@@ -7,27 +7,19 @@ $topics = $result["data"]['topics'];
 
 <h1>liste topics</h1>
 
-<form >
-    <select name="categorie" id='cateorie'>
-        <option value="">--Catégorie--</option><?php
-        foreach($categories as $categorie){?>
 
-                <option value="<?= $categorie->getCategorie();?>"> <?= $categorie->getCategorie();?></option>
-
-            <?php
-
-        }?>
-    </select>
-    <input type="submit" value="Recherche">
-</form>
 <?php
-foreach($topics as $topic){
-    ?>  
-    <div>
-        <a href="index.php?ctrl=topics&action=topics"><p><?=$topic->getTitle()?> - <?=$topic->getCreationdate()?></p></a>
-    </div>
-    <?php
+foreach($categories as $categorie){?>  
+    <a href='index.php?ctrl=forum&action=listTopics&id=<?=$categorie->getID()?>'><?=$categorie->getCategorie()?></a><?php
 }
 
 
+foreach($topics as $topic){
+
+    if($topic->getTitle() != null){?>
+        <div>
+            <a href="index.php?ctrl=post&action=topics"><p><?=$topic->getTitle()?> - <?=$topic->getCreationdate()?></p></a>
+        </div><?php
+    }
+}
   
