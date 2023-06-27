@@ -7,22 +7,24 @@ $topics = $result["data"]['topics'];
 
 <h1>liste topics</h1>
 
-<select name="categorie" id='cateorie'>
-    <option value="">--Catégorie--</option><?php
-    foreach($categories as $categorie){?>
+<form >
+    <select name="categorie" id='cateorie'>
+        <option value="">--Catégorie--</option><?php
+        foreach($categories as $categorie){?>
 
-            <option value="<?= $categorie->getCategorie();?>"> <?= $categorie->getCategorie();?></option>
+                <option value="<?= $categorie->getCategorie();?>"> <?= $categorie->getCategorie();?></option>
 
-        <?php
+            <?php
 
-    }?>
-</select>
-
+        }?>
+    </select>
+    <input type="submit" value="Recherche">
+</form>
 <?php
 foreach($topics as $topic){
     ?>  
     <div>
-        <p><?=$topic->getTitle()?> - <?=$topic->getCreationdate()?></p>
+        <a href="index.php?ctrl=topics&action=topics"><p><?=$topic->getTitle()?> - <?=$topic->getCreationdate()?></p></a>
     </div>
     <?php
 }
