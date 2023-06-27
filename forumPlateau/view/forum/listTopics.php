@@ -1,7 +1,8 @@
 <?php
 
-$topics = $result["data"]['topics'];
 $categories = $result["data"]["categories"];
+$topics = $result["data"]['topics'];
+
 ?>
 
 <h1>liste topics</h1>
@@ -18,9 +19,11 @@ $categories = $result["data"]["categories"];
 </select>
 
 <?php
-foreach($topics as $topic ){
-    ?>
-        <p><?=$topic->getTitle()?></p>
+foreach($topics as $topic){
+    ?>  
+    <div>
+        <p><?=$topic->getTitle()?> - <?=$topic->getCreationdate()?></p>
+    </div>
     <?php
 }
 
