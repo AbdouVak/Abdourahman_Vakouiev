@@ -27,4 +27,14 @@
             );
         }
 
+        public function topicNames($id){
+            $sql = "SELECT *
+            FROM " . $this->tableName." t
+            WHERE  t.id_topic = :id";
+        
+            return $this->getMultipleResults(
+                DAO::select($sql, ['id' => $id]),
+                $this->className
+            );
+        }
     }
