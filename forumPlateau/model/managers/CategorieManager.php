@@ -15,5 +15,14 @@
             parent::connect();
         }
 
-
+        public function categorieName($id){
+            $sql = "SELECT *
+            FROM " . $this->tableName." p
+            WHERE p.id_categorie = :id";
+        
+            return $this->getMultipleResults(
+                DAO::select($sql, ['id' => $id]),
+                $this->className
+            );
+        }
     }
