@@ -11,19 +11,18 @@
 
         public function index(){
 
+        }
+
+        public function listPostByTopic($id){
             $postManager = new PostManager();
 
             return [
-                "view" => VIEW_DIR."forum/topics.php",
+                "view" => VIEW_DIR."forum/listPost.php",
                 "data" => [
-                    "posts" => $postManager->findAll(["creationdate", "ASC"]),
+                    "posts" => $postManager->findPostByTopic($id)
                 ]
             ];
-
-            
-        
         }
-
         
 
     }
