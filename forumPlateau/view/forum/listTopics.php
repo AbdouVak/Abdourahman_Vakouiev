@@ -1,23 +1,21 @@
 <?php
 
 $categories = $result["data"]["categories"];
-$topics = $result["data"]['topics'];
+$topics = $result["data"]["topics"];
+$addTopic = $result["data"]["addTopic"];
+$IDCategorie = $result["data"]["IDCategorie"];
+$categoryNames = $result["data"]["categoryNames"];
 
-
-?>
-
-<h1>liste topics</h1>
-
-
-<?php
-
-
-    foreach($categories as $categorie){?>  
-        <a href='index.php?ctrl=forum&action=listTopicsByCategorie&id=<?=$categorie->getID()?>'><?=$categorie->getCategorie()?></a><?php
+if($categoryNames != null){
+    foreach($categoryNames as $categoryName){?>  
+        <h1>liste topics <?= $categoryName->getCategorie()?></h1><?php
     }
+}
 
 
-
+foreach($categories as $categorie){?>  
+    <a href='index.php?ctrl=forum&action=listTopicsByCategorie&id=<?=$categorie->getID()?>'><?=$categorie->getCategorie()?></a><?php
+}
 
 if(isset($topics)){
     foreach($topics as $topic){
@@ -29,27 +27,26 @@ if(isset($topics)){
         }
         
     }
-}else{?>
+}else if($addTopic){?>
 
     <p>Pas de topic pour cette categorie</p><?php
 
-}?>
-<p>----------------------------------------------------------</p>
+}
 
-<form>
+if($addTopic){?>
+    <p> -------------------------------------------------------------------------------------------- </p>
 
-    <label for="name">Titre:</label>
-    <input type="text" id="name" name="name" required
-        minlength="4" maxlength="8" size="10"> <?= date('d-m-y h:i:s');?><br></br>
+    <form action="index.php?ctrl=forum&action=addTopic&id=<?= $IDCategorie ?>" method='POST'id="submit" >
 
+    <label for="title">Titre:</label>
+    <input type="text" name="title"size="10"><br>
 
     <label for="post">Post:</label><br>
-    <textarea id="post" name="post"rows="6" cols="50">
+    <textarea name="post"rows="6" cols="50">
     </textarea><br>
+    
+    <input type="submit" name="submit" value="submit">
 
     
-    <input type="submit">
-
-    
-</form>
-  
+    </form><?php
+}?>
