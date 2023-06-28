@@ -55,25 +55,15 @@
                 return $this;
         }
 
-        /**
-         * Get the value of creationdate
-         */ 
-        public function getCreationdate()
-        {
-                return $this->creationdate;
-        }
-
-        /**
-         * Set the value of creationdate
-         *
-         * @return  self
-         */ 
-        public function setCreationdate($creationdate)
-        {
-                $this->creationdate = $creationdate;
-
+        public function getCreationdate(){
+                $formattedDate = $this->creationdate->format("d/m/Y, H:i:s");
+                return $formattedDate;
+            }
+    
+            public function setCreationdate($date){
+                $this->creationdate = new \DateTime($date);
                 return $this;
-        }
+            }
 
         /**
          * Get the value of topic
