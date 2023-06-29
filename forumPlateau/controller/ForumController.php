@@ -8,6 +8,7 @@
     use Model\Managers\TopicManager;
     use Model\Managers\CategorieManager;
     use Model\Managers\PostManager;
+    
     class ForumController extends AbstractController implements ControllerInterface{
 
         public function index(){
