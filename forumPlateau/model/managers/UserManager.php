@@ -15,5 +15,38 @@
             parent::connect();
         }
 
+        public function checkPseudo($pseudo){
 
+            $sql = "SELECT *
+                    FROM " . $this->tableName." u
+                    WHERE u.pseudo = :pseudo";
+                
+            return $this->getMultipleResults(
+                DAO::select($sql, ['pseudo' => $pseudo]),
+                $this->className
+            );
+        }
+
+        public function checkMail($email){
+
+            $sql = "SELECT *
+                    FROM " . $this->tableName." u
+                    WHERE u.email = :email";
+                
+            return $this->getMultipleResults(
+                DAO::select($sql, ['email' => $email]),
+                $this->className
+            );
+        }
+
+        public function retrievePassword($email){
+            $sql = "SELECT password
+                    FROM " . $this->tableName." u
+                    WHERE u.email = :email";
+                
+            return $this->getMultipleResults(
+                DAO::select($sql, ['email' => $email]),
+                $this->className
+            );
+        }
     }
