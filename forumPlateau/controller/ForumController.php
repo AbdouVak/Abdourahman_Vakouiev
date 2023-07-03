@@ -8,6 +8,7 @@
     use Model\Managers\TopicManager;
     use Model\Managers\CategorieManager;
     use Model\Managers\PostManager;
+    use Model\Managers\UserManager;
     
     class ForumController extends AbstractController implements ControllerInterface{
 
@@ -80,16 +81,32 @@
             }
         }
 
-        public function profilView(){
+        public function profilView($id){
             $topicManager = new TopicManager();
+            $userManager = new UserManager();
+            $user = $userManager->findOneById($id);
 
-            return [
+            if($id == Session::getUser()->getId()){
+                return [
                 "view" => VIEW_DIR."forum/profil.php",
                 "data" => [
-                    "pseudo" => Session::getUser()->getPseudo(),
-                    "email" => Session::getUser()->getEmail(),
-                    "topics" => $topicManager->findTopicByID(Session::getUser()->getId())
-                ]
-            ];
+                    "pseudo" => $user->getPseudo(),
+                    "email" =>  $user->getEmail(),
+                    "topics" => $topicManager->findTopicByID($id)
+                    
+                    ]
+                ];
+            }else {
+                return [
+                    "view" => VIEW_DIR."forum/profil.php",
+                    "data" => [
+                        "pseudo" => $user->getPseudo(),
+                        "email" =>  null,
+                        "topics" => $topicManager->findTopicByID($id)
+                        ]
+                    ];
+            }
+            
         }
+                
     }
