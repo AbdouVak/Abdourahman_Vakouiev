@@ -35,17 +35,16 @@
                 if(isset($_POST['post']) && (!empty($_POST['post']))){
                     $post = filter_input(INPUT_POST,"post",FILTER_SANITIZE_FULL_SPECIAL_CHARS);    
                     
-                    if($post ) {
+                    if($post) {
 
                         $postManager->add([
                             "texte" => $post,
                             "creationdate" => date('d-m-y h:i:s'),
                             "topic_id" => $id,
-                            "user_id" => 1,
+                            "user_id" => Session::getUser()->getId(),
                         ]);
                     }
-                    
-                    header("Location:index.php?ctrl=post&action=listPostByTopic&id=$id");
+                    $this->redirectTo("post","listPostByTopic",$id);
                 }
             }
         }
