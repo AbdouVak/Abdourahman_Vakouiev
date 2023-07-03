@@ -2,9 +2,7 @@
 
 $posts = $result["data"]['posts'];
 $IDPost =  $result["data"]['IDPost'];
-
 $topicNames = $result["data"]["topicNames"];
-
 foreach($topicNames as $topicName){?>  
     <h1> " <?= $topicName->getTitle()?> "</h1><?php
 }
@@ -16,7 +14,7 @@ foreach($topicNames as $topicName){?>
 foreach($posts as $post){?>  
 
     <div>
-        <p><?=$post->getUser()->getPseudo()?> - <?=$post->getCreationdate()?> </p>
+        <a href="index.php?ctrl=forum&action=profilView&id=<?= $post->getUser()->getId()?>"><p><?=$post->getUser()->getPseudo()?></a> - <?=$post->getCreationdate()?> </p>
         <p><?=$post->getTexte()?> </p>
         <p> --------------------------------------------------------------------------------------------------------------------- </p>
    
