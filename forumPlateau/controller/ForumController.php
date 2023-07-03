@@ -57,12 +57,13 @@
                     $post = filter_input(INPUT_POST,"post",FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                     $title = filter_input(INPUT_POST,"title",FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                     
-                    
-                    if($post && $title) {
+
+                    if($post  && $title) {
+
                         $idTopicPublish = $topicManager->add([
                             "title" => $title,
                             "creationdate" => date('d-m-y h:i:s'),
-                            "user_id" => 1,
+                            "user_id" => Session::getUser()->getId(),
                             "closed" => "open",
                             "categorie_id" => $id,
                         ]);
@@ -71,12 +72,24 @@
                             "texte" => $post,
                             "creationdate" => date('d-m-y h:i:s'),
                             "topic_id" => $idTopicPublish,
-                            "user_id" => 1
+                            "user_id" => Session::getUser()->getId()
                         ]);
                     }
-                    
-                    header("Location:index.php?ctrl=forum&action=listTopicsByCategorie&id=$id");
+                    $this->redirectTo("forum","listTopicsByCategorie",$id);
                 }
             }
+        }
+
+        public function profilView(){
+            $topicManager = new TopicManager();
+
+            return [
+                "view" => VIEW_DIR."forum/profil.php",
+                "data" => [
+                    "pseudo" => Session::getUser()->getPseudo(),
+                    "email" => Session::getUser()->getEmail(),
+                    "topics" => $topicManager->findTopicByID(Session::getUser()->getId())
+                ]
+            ];
         }
     }
