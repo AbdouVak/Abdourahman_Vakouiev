@@ -40,13 +40,26 @@
         }
 
         public function retrievePassword($email){
-            $sql = "SELECT password
+            $sql = "SELECT *
                     FROM " . $this->tableName." u
                     WHERE u.email = :email";
                 
-            return $this->getMultipleResults(
-                DAO::select($sql, ['email' => $email]),
+            return $this->getOneOrNullResult(
+                DAO::select($sql, ['email' => $email],false),
                 $this->className
             );
         }
+
+        public function findOneBYEmail($email){
+            $sql = "SELECT *
+                    FROM " . $this->tableName." u
+                    WHERE u.email = :email";
+                
+            return $this->getOneOrNullResult(
+                DAO::select($sql, ['email' => $email],false),
+                $this->className
+            );
+        }
+
+        
     }
