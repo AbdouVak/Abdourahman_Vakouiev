@@ -68,8 +68,7 @@
                                         "status" => "actif"
                                     ]);
 
-                                    $this->redirectTo("security","registerView");
-
+                                    header("Location:index.php?ctrl=security&action=registerView");
                                 }else{
                                     Session::addFlash("error","pseudo deja existant");
                                 }
@@ -111,16 +110,19 @@
                                 if($user->getStatus()){
                                     
                                     Session::SetUser($user);
+                                }else{
+                                    Session::addFlash("error","vous etez banni");
                                 }
                             }else{
                                 Session::addFlash("error","mot de passe incorrect");
                             }
                         }
                     }
+
+                    
                 }
             }
-            
-            $this->redirectTo("security","loginView");
+            header("Location:index.php?ctrl=security&action=loginView");
         }
 
         function password_verify($password,$hash){
@@ -131,4 +133,32 @@
             }
             
         }
+
+        public function listUser(){
+            
+            $userManager = new UserManager();
+
+            return [
+                "view" => VIEW_DIR."security/listUser.php",
+                "data" => [
+                    "user" => $userManager->findAll(["pseudo", "ASC"]),
+                ]
+            ];
+            
+        }
+
+        public function ban($id){
+            $userManager = new UserManager();
+            $userManager->changeStatus($id,"ban");
+
+            header("Location:index.php?ctrl=security&action=listUser");
+        }
+
+        public function unban($id){
+            $userManager = new UserManager();
+            $userManager->changeStatus($id,"actif");
+
+            header("Location:index.php?ctrl=security&action=listUser");
+        }
+        
     }
