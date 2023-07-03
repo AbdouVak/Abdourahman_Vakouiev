@@ -8,9 +8,10 @@
         private $id;
         private $pseudo;
         private $password;
-        private $dateInscription;
+        private $inscriptionDate;
         private $role;
         private $email;
+        private $status;
 
         public function __construct($data){         
             $this->hydrate($data);        
@@ -134,5 +135,41 @@
                 $this->email = $email;
 
                 return $this;
+        }
+
+        /**
+         * Get the value of status
+         */ 
+        public function getStatus()
+        {
+                if($this->status == "actif"){
+                        return true;
+                }else{
+                        return false;
+                }
+        }
+
+        /**
+         * Set the value of status
+         *
+         * @return  self
+         */ 
+        public function setStatus($status)
+        {
+                $this->status = $status;
+
+                return $this;
+        }
+
+        /**
+         * Set the value of status
+         *
+         * @return  self
+         */ 
+        public function hasRole($role):bool
+        {
+                $result =$this->role == $role;
+
+                return $result;
         }
     }
