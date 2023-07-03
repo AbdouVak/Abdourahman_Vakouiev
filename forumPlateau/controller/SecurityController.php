@@ -26,6 +26,20 @@
             ];
         }
 
+        public function profileView(){
+            return [
+                "view" => VIEW_DIR."security/profil.php",
+                "data" => []
+            ];
+        }
+
+        public function logout(){
+            Session::SetUser(null);
+            return [
+                "view" => VIEW_DIR."home.php",
+                "data" => []
+            ];
+        }
         
         public function register(){
             $userManager = new UserManager();
@@ -50,20 +64,22 @@
                                         "inscriptionDate" => date('d-m-y h:i:s'),
                                         "password" => $password,
                                         "email" => $email,
-                                        "role" => "user",
+                                        "role" => "ROLE_USER",
+                                        "status" => "actif"
                                     ]);
 
-                                    header("Location:index.php?ctrl=security&action=registerView");
+                                    $this->redirectTo("security","registerView");
+
                                 }else{
-                                    echo "pseudo deja existant";die;
+                                    Session::addFlash("error","pseudo deja existant");
                                 }
 
                             }else{
-                                echo "mail deja existant";die;
+                                Session::addFlash("error","mail deja existant");
                             }
 
                         }else{
-                            echo "mot de passe different";die;
+                            Session::addFlash("error","different");
                         }
                     }
                 }
@@ -72,21 +88,47 @@
 
 
         public function login(){
+
             $userManager = new UserManager();
             if(isset($_POST['submitLogin'])){
 
-                if(isset($_POST['pseudo']) && (!empty($_POST['pseudo'])) && isset($_POST['password']) && (!empty($_POST['password']))){
+                if(isset($_POST['email']) && (!empty($_POST['email'])) && isset($_POST['password']) && (!empty($_POST['password']))){
 
                     $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL,FILTER_VALIDATE_EMAIL);
                     $password = filter_input(INPUT_POST,'password',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                     
-                    var_dump($userManager->retrievePassword($email));
                     if($email && $password){
 
-                    }
-                    
+                        $dbPass = $userManager->retrievePassword($email);
 
+                        if($dbPass){
+
+                            $hash = $dbPass->getPassword();
+                            $user = $userManager->findOneByEmail($email);
+                            
+                            if($this->password_verify($password,$hash)){
+                                
+                                if($user->getStatus()){
+                                    
+                                    Session::SetUser($user);
+                                }
+                            }else{
+                                Session::addFlash("error","mot de passe incorrect");
+                            }
+                        }
+                    }
                 }
             }
+            
+            $this->redirectTo("security","loginView");
+        }
+
+        function password_verify($password,$hash){
+            if($password === $hash){
+                return true;
+            }else{
+                return false;
+            }
+            
         }
     }
