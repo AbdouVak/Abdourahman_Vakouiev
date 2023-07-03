@@ -42,8 +42,7 @@ if($addTopic){?>
     <input type="text" name="title"size="10"><br>
 
     <label for="post">Post:</label><br>
-    <textarea name="post"rows="6" cols="50">
-    </textarea><br>
+    <textarea name="post"rows="6" cols="50"></textarea><br>
     
     <input type="submit" name="submit" value="submit">
 
