@@ -61,5 +61,11 @@
             );
         }
 
-        
+        public function changeStatus($id,$status){
+            $sql = "UPDATE ".$this->tableName." 
+                SET `status`= '".$status."'
+                WHERE  id_".$this->tableName."=:id;";
+
+            return DAO::delete($sql, ['id' => $id]); 
+        }
     }
