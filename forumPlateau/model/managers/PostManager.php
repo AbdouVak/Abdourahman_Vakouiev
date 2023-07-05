@@ -32,14 +32,19 @@
             $sql = "SELECT *
                     FROM " . $this->tableName." p
                     WHERE p.topic_id = :id
-                    AND creationdate=(
-                        SELECT MIN(creationdate) 
-                        FROM " . $this->tableName." p 
-                        WHERE p.topic_id = :id)";
-                
+                    ORDER BY creationdate
+                    LIMIT 1";
             return $this->getMultipleResults(
                 DAO::select($sql, ['id' => $id]),
                 $this->className
             );
+        }
+
+        public function updatePost($id,$post){
+            $sql = "UPDATE ".$this->tableName."
+                    SET texte='$post' 
+                    WHERE  id_".$this->tableName."=:id;";
+
+            return DAO::delete($sql, ['id' => $id]); 
         }
     }
