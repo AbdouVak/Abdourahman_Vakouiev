@@ -27,14 +27,11 @@
             );
         }
 
-        public function topicNames($id){
-            $sql = "SELECT *
-            FROM " . $this->tableName." t
-            WHERE  t.id_topic = :id";
-        
-            return $this->getMultipleResults(
-                DAO::select($sql, ['id' => $id]),
-                $this->className
-            );
+        public function changeStatus($id,$status){
+            $sql = "UPDATE ".$this->tableName." 
+                SET `status`= '".$status."'
+                WHERE  id_".$this->tableName."=:id;";
+
+            return DAO::delete($sql, ['id' => $id]); 
         }
     }
