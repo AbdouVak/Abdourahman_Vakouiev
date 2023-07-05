@@ -140,13 +140,8 @@
         /**
          * Get the value of status
          */ 
-        public function getStatus()
-        {
-                if($this->status == "actif"){
-                        return true;
-                }else{
-                        return false;
-                }
+        public function getStatus(){
+                return $this->status;
         }
 
         /**

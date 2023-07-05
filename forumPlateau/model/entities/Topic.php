@@ -9,7 +9,8 @@
         private $title;
         private $user;
         private $creationdate;
-        private $closed;
+        private $status;
+        private $categorie;
 
         public function __construct($data){         
             $this->hydrate($data);        
@@ -86,21 +87,41 @@
         }
 
         /**
-         * Get the value of closed
+         * Get the value of status
          */ 
-        public function getClosed()
+        public function getStatus()
         {
-                return $this->closed;
+                return $this->status;
         }
 
         /**
-         * Set the value of closed
+         * Set the value of status
          *
          * @return  self
          */ 
-        public function setClosed($closed)
+        public function setStatus($status)
         {
-                $this->closed = $closed;
+                $this->status = $status;
+
+                return $this;
+        }
+
+        /**
+         * Get the value of categorie
+         */ 
+        public function getCategorie()
+        {
+                return $this->categorie;
+        }
+
+        /**
+         * Set the value of categorie
+         *
+         * @return  self
+         */ 
+        public function setCategorie($categorie)
+        {
+                $this->categorie = $categorie;
 
                 return $this;
         }
