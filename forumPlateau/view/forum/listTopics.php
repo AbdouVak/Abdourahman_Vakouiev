@@ -2,41 +2,46 @@
 
 $categories = $result["data"]["categories"];
 $topics = $result["data"]["topics"];
-$addTopic = $result["data"]["addTopic"];
-$IDCategorie = $result["data"]["IDCategorie"];
-$categoryNames = $result["data"]["categoryNames"];
+$category = $result["data"]["category"];
 
-if($categoryNames != null){
-    foreach($categoryNames as $categoryName){?>  
-        <h1>liste topics <?= $categoryName->getCategorie()?></h1><?php
-    }
+if($category){
+    ?><h1>liste topics <?= $category->getCategorie()?></h1><?php
 }
-
 
 foreach($categories as $categorie){?>  
     <a href='index.php?ctrl=forum&action=listTopicsByCategorie&id=<?=$categorie->getID()?>'><?=$categorie->getCategorie()?></a><?php
 }
 
 if(isset($topics)){
-    foreach($topics as $topic){
-
-        if($topic->getTitle() != null){?>
+    foreach($topics as $topic){ ?>
             <div>
-                <a href="index.php?ctrl=post&action=listPostByTopic&id=<?=$topic->getID()?>"><p><?=$topic->getTitle()?> - <?=$topic->getCreationdate()?></p></a>
+                <a href="index.php?ctrl=post&action=listPostByTopic&id=<?=$topic->getID()?>">
+                
+                <p><?=$topic->getTitle()?></a> 
+
+                - Date de creation : <?=$topic->getCreationdate()?> 
+                
+                <?php if($topic->getStatus() == "Close"){
+                    echo "Status :".$topic->getStatus() ;
+                }?></p>
+
+                <?php
+                if(App\Session::getUser() && (App\Session::getUser() == $topic->getUser() || App\Session::isAdmin())) { ?>
+                    <a href="index.php?ctrl=security&action=changeStatusTopic&id=<?=$topic->getID()?>">Changer status</a>
+                    <a href="index.php?ctrl=security&action=deleteTopic&id=<?=$topic->getID()?>">supprimer</a>
+                    <a href="index.php?ctrl=security&action=editView&id=<?=$topic->getID()?>">modifier</a><?php 
+                } ?>
+                
             </div><?php
-        }
-        
     }
-}else if($addTopic){?>
-
-    <p>Pas de topic pour cette categorie</p><?php
-
 }
 
-if($addTopic){?>
-    <p> -------------------------------------------------------------------------------------------- </p>
+?>
+    <p> -------------------------------------------------------------------------------------------- </p><?php
 
-    <form action="index.php?ctrl=forum&action=addTopic&id=<?= $IDCategorie ?>" method='POST'id="submit" >
+if(App\Session::getUser()) { ?>
+
+    <form action="index.php?ctrl=forum&action=addTopic&id=<?= $category->getId() ?>" method='POST'id="submit" >
 
     <label for="title">Titre:</label>
     <input type="text" name="title"size="10"><br>
@@ -47,5 +52,6 @@ if($addTopic){?>
     <input type="submit" name="submit" value="submit">
 
     
-    </form><?php
-}?>
+    </form><?php } else {
+        echo "<p>Vous devez être connecté pour créer un nouveau topic !</p>";
+}
