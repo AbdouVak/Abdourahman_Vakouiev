@@ -28,4 +28,18 @@
             );
         }
 
+        public function findFirstTopicPost($id){
+            $sql = "SELECT *
+                    FROM " . $this->tableName." p
+                    WHERE p.topic_id = :id
+                    AND creationdate=(
+                        SELECT MIN(creationdate) 
+                        FROM " . $this->tableName." p 
+                        WHERE p.topic_id = :id)";
+                
+            return $this->getMultipleResults(
+                DAO::select($sql, ['id' => $id]),
+                $this->className
+            );
+        }
     }
