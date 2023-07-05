@@ -17,12 +17,13 @@
             $postManager = new PostManager();
             $topicManager = new TopicManager();
 
+            $post = $postManager->findPostByTopic($id);
+            $topic = $topicManager->findOneById($id);
             return [
                 "view" => VIEW_DIR."forum/listPost.php",
                 "data" => [
-                    "posts" => $postManager->findPostByTopic($id),
-                    "IDPost" => $id,
-                    "topicNames" => $topicManager->topicNames($id)
+                    "posts" => $post,
+                    "topic" => $topic
                 ]
             ];
         }
@@ -44,7 +45,8 @@
                             "user_id" => Session::getUser()->getId(),
                         ]);
                     }
-                    $this->redirectTo("post","listPostByTopic",$id);
+                    header("Location:index.php?ctrl=post&action=listPostByTopic&id=$id");
+
                 }
             }
         }
