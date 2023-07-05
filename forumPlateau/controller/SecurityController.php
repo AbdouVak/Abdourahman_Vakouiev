@@ -42,7 +42,7 @@
             ];
         }
 
-        public function editView($id){
+        public function editTopicView($id){
             $topicManager = new TopicManager();
             $postManager = new PostManager();
 
@@ -53,6 +53,19 @@
                 "view" => VIEW_DIR."security/editTopic.php",
                 "data" => [
                     "topic" => $topic,
+                    "posts" => $posts
+                ]
+            ];
+        }
+
+        public function editPostView($id){
+            $postManager = new PostManager();
+
+            $posts = $postManager->findFirstTopicPost($id);
+
+            return [
+                "view" => VIEW_DIR."security/editPost.php",
+                "data" => [
                     "posts" => $posts
                 ]
             ];
@@ -214,22 +227,54 @@
         
         public function editTopic($id){
             $topicManager = new TopicManager();
+            $postManager = new PostManager();
 
             $topic = $topicManager->findOneById($id);
+            $posts = $postManager->findFirstTopicPost($id);
+            $postEdited = null;
 
+            foreach($posts as $postBoocle){
+                $postEdited = $postBoocle;
+            }
+            
             if(isset($_POST['submit'])){
-
+                
                 if(isset($_POST['post']) && (!empty($_POST['post']))){
                     $post = filter_input(INPUT_POST,"post",FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                     $title = filter_input(INPUT_POST,"title",FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                     
 
-                    if($post  && $title) {
-                        var_dump("test");die;
+                    if($post && $title) {   
+                        $topicManager->updateTilte($id,$title);
+                        $postManager->updatePost($postEdited->getId(),$post);
                     }
                 }
             }
 
-            header("Location:index.php?ctrl=post&action=listPostByTopic&id=".$post->getTopic()->getId()."");
+            header("Location:index.php?ctrl=forum&action=listTopicsByCategorie&id=".$topic->getCategorie()->getId()."");
+        }
+
+        public function editPost($id){
+            $postManager = new PostManager();
+
+            $posts = $postManager->findFirstTopicPost($id);
+            $postEdited = null;
+
+            foreach($posts as $postBoocle){
+                $postEdited = $postBoocle;
+            }
+            
+            if(isset($_POST['submit'])){
+                
+                if(isset($_POST['post']) && (!empty($_POST['post']))){
+                    $post = filter_input(INPUT_POST,"post",FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                   
+                    if($post && $title) {   
+                        $postManager->updatePost($postEdited->getId(),$post);
+                    }
+                }
+            }
+
+            header("Location:index.php?ctrl=forum&action=listTopicsByCategorie&id=".$topic->getCategorie()->getId()."");
         }
     }
