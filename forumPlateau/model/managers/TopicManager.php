@@ -34,4 +34,12 @@
 
             return DAO::delete($sql, ['id' => $id]); 
         }
+
+        public function updateTilte($id,$title){
+            $sql = "UPDATE ".$this->tableName."
+                    SET title='$title' 
+                    WHERE  id_".$this->tableName."=:id;";
+
+            return DAO::delete($sql, ['id' => $id]); 
+        }
     }
