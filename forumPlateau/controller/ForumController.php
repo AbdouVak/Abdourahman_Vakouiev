@@ -22,9 +22,7 @@
                 "data" => [
                     "categories" => $CategorieManager->findAll(["categorie", "ASC"]),
                     "topics" => null,
-                    "addTopic" => false,
-                    "IDCategorie" => null,
-                    "categoryNames" => null
+                    "category" => null,
                 ]
             ];
             
@@ -33,15 +31,15 @@
         public function listTopicsByCategorie($id){
             $CategorieManager = new CategorieManager();
             $topicManager = new TopicManager();
+
+            $category = $CategorieManager->findOneById($id);
             
             return [
                 "view" => VIEW_DIR."forum/listTopics.php",
                 "data" => [
                     "categories" => $CategorieManager->findAll(["categorie", "ASC"]),
                     "topics" => $topicManager->findTopicByID($id),
-                    "addTopic" => true,
-                    "IDCategorie" => $id,
-                    "categoryNames" => $CategorieManager->categorieName($id)
+                    "category" => $category,
                 ]
             ];
             
@@ -54,7 +52,7 @@
 
             if(isset($_POST['submit'])){
 
-                if(isset($_POST['post']) && (!empty($_POST['post']))){
+                if(isset($_POST['post']) && (!empty($_POST['post'])) && isset($_POST['title']) && (!empty($_POST['title']))){
                     $post = filter_input(INPUT_POST,"post",FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                     $title = filter_input(INPUT_POST,"title",FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                     
@@ -65,7 +63,6 @@
                             "title" => $title,
                             "creationdate" => date('d-m-y h:i:s'),
                             "user_id" => Session::getUser()->getId(),
-                            "closed" => "open",
                             "categorie_id" => $id,
                         ]);
 
@@ -76,7 +73,7 @@
                             "user_id" => Session::getUser()->getId()
                         ]);
                     }
-                    $this->redirectTo("forum","listTopicsByCategorie",$id);
+                    header("Location:index.php?ctrl=forum&action=listTopicsByCategorie&id=$id");
                 }
             }
         }
