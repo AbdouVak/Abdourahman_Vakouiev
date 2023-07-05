@@ -6,7 +6,8 @@
     use App\AbstractController;
     use App\ControllerInterface;
     use Model\Managers\UserManager;
-    
+    use Model\Managers\TopicManager;
+    use Model\Managers\PostManager;
     class SecurityController extends AbstractController implements ControllerInterface{
 
         public function index(){
@@ -40,6 +41,22 @@
                 "data" => []
             ];
         }
+
+        public function editView($id){
+            $topicManager = new TopicManager();
+            $postManager = new PostManager();
+
+            $topic = $topicManager->findOneById($id);
+            $posts = $postManager->findFirstTopicPost($id);
+
+            return [
+                "view" => VIEW_DIR."security/editTopic.php",
+                "data" => [
+                    "topic" => $topic,
+                    "posts" => $posts
+                ]
+            ];
+        }
         
         public function register(){
             $userManager = new UserManager();
@@ -67,16 +84,13 @@
                                         "role" => "ROLE_USER",
                                         "status" => "actif"
                                     ]);
-
                                     header("Location:index.php?ctrl=security&action=registerView");
                                 }else{
                                     Session::addFlash("error","pseudo deja existant");
                                 }
-
                             }else{
                                 Session::addFlash("error","mail deja existant");
                             }
-
                         }else{
                             Session::addFlash("error","different");
                         }
@@ -107,7 +121,7 @@
                             
                             if($this->password_verify($password,$hash)){
                                 
-                                if($user->getStatus()){
+                                if($user->getStatus() == "Actif"){
                                     
                                     Session::SetUser($user);
                                 }else{
@@ -118,11 +132,9 @@
                             }
                         }
                     }
-
-                    
                 }
             }
-            header("Location:index.php?ctrl=security&action=loginView");
+            header("Location:index.php?ctrl=home");
         }
 
         function password_verify($password,$hash){
@@ -147,18 +159,77 @@
             
         }
 
-        public function ban($id){
+        public function changeStatusUser($id){
             $userManager = new UserManager();
-            $userManager->changeStatus($id,"ban");
+            $user= $userManager->findOneById($id);
+            if($user->getStatus() == "Ban"){
+                $userManager->changeStatus($id,"Actif");
+            }else{
+                $userManager->changeStatus($id,"Ban");
+            }
 
             header("Location:index.php?ctrl=security&action=listUser");
         }
 
-        public function unban($id){
-            $userManager = new UserManager();
-            $userManager->changeStatus($id,"actif");
 
-            header("Location:index.php?ctrl=security&action=listUser");
+        public function changeStatusTopic($id){
+            $topicManager = new TopicManager();
+            $topic= $topicManager->findOneById($id);
+            
+            if($topic->getStatus() == "Close"){
+                $topicManager->changeStatus($id,"Open");
+            }else{
+                $topicManager->changeStatus($id,"Close");
+            }
+
+            header("Location:index.php?ctrl=forum&action=listTopicsByCategorie");
+        }
+
+        public function deleteTopic($id){
+            $topicManager = new TopicManager();
+            $postManager = new PostManager();
+
+            $topic = $topicManager->findOneById($id);
+            $posts  =$postManager->findPostByTopic($id);
+
+            foreach($posts as $post){
+                $postManager->delete($post->getId());
+            }
+            $topicManager->delete($id);
+
+            header("Location:index.php?ctrl=forum&action=listTopicsByCategorie&id=".$topic->getCategorie()->getId()."");
         }
         
+        public function deletePost($id){
+            $topicManager = new TopicManager();
+            $postManager = new PostManager();
+
+            $post =$postManager->findOneById($id);
+            
+            $postManager->delete($id);
+
+            header("Location:index.php?ctrl=post&action=listPostByTopic&id=".$post->getTopic()->getId()."");
+        }
+
+        
+        public function editTopic($id){
+            $topicManager = new TopicManager();
+
+            $topic = $topicManager->findOneById($id);
+
+            if(isset($_POST['submit'])){
+
+                if(isset($_POST['post']) && (!empty($_POST['post']))){
+                    $post = filter_input(INPUT_POST,"post",FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                    $title = filter_input(INPUT_POST,"title",FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                    
+
+                    if($post  && $title) {
+                        var_dump("test");die;
+                    }
+                }
+            }
+
+            header("Location:index.php?ctrl=post&action=listPostByTopic&id=".$post->getTopic()->getId()."");
+        }
     }
