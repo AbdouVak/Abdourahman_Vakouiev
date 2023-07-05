@@ -2,9 +2,12 @@
 
 $posts = $result["data"]['posts'];
 $topic =  $result["data"]['topic'];
-
-foreach($topic as $topicName){?>  
-    <h1> " <?= $topicName->getTitle()?> "</h1><?php
+if(isset($topic)){
+    foreach($topic as $topicName){
+        ?> 
+    
+        <h1> " <?= $topicName->getTitle()?> "</h1><?php
+    }
 }
 ?>
 

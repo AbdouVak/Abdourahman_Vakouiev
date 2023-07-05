@@ -29,7 +29,7 @@ if(isset($topics)){
                 if(App\Session::getUser() && (App\Session::getUser() == $topic->getUser() || App\Session::isAdmin())) { ?>
                     <a href="index.php?ctrl=security&action=changeStatusTopic&id=<?=$topic->getID()?>">Changer status</a>
                     <a href="index.php?ctrl=security&action=deleteTopic&id=<?=$topic->getID()?>">supprimer</a>
-                    <a href="index.php?ctrl=security&action=editView&id=<?=$topic->getID()?>">modifier</a><?php 
+                    <a href="index.php?ctrl=security&action=editTopicView&id=<?=$topic->getID()?>">modifier</a><?php 
                 } ?>
                 
             </div><?php
